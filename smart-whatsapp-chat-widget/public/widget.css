@@ -1,0 +1,199 @@
+/**
+ * Frontend Styling for Smart WhatsApp Chat Widget
+ */
+
+.swcw-container {
+    position: fixed;
+    bottom: 25px;
+    z-index: 999999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.swcw-pos-right {
+    right: 25px;
+}
+
+.swcw-pos-left {
+    left: 25px;
+}
+
+/* Trigger Button */
+.swcw-trigger {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--swcw-btn-color, #25D366);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.swcw-trigger:hover {
+    transform: scale(1.1);
+}
+
+.swcw-trigger svg {
+    width: 32px;
+    height: 32px;
+}
+
+.swcw-trigger.swcw-hidden {
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Window */
+.swcw-window {
+    width: 350px;
+    max-width: 90vw;
+    background: #efeae2;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.swcw-window.swcw-active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Header */
+.swcw-header {
+    background: #075e54;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.swcw-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.swcw-logo-box {
+    width: 45px;
+    height: 45px;
+    background: white;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swcw-logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.swcw-header-text h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.swcw-header-text p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.swcw-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* Body */
+.swcw-body {
+    padding: 20px;
+    min-height: 150px;
+    background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+    background-size: contain;
+}
+
+.swcw-msg-bubble {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 0 15px 15px 15px;
+    font-size: 14px;
+    color: #333;
+    max-width: 85%;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.swcw-time {
+    display: block;
+    font-size: 10px;
+    color: #999;
+    text-align: right;
+    margin-top: 4px;
+}
+
+/* Footer */
+.swcw-footer {
+    padding: 15px;
+    background: #f0f2f5;
+}
+
+.swcw-input-wrap {
+    display: flex;
+    background: white;
+    border-radius: 30px;
+    padding: 5px 15px;
+    align-items: center;
+    gap: 10px;
+}
+
+.swcw-input-wrap input {
+    flex: 1;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    padding: 8px 0 !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+}
+
+.swcw-input-wrap button {
+    background: none;
+    border: none;
+    color: #075e54;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.swcw-input-wrap button svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .swcw-window {
+        width: calc(100vw - 30px);
+        bottom: 80px;
+    }
+}
