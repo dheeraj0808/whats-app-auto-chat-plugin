@@ -4,7 +4,7 @@
  * Plugin URI:        https://github.com/dheeraj0808/What-s-app-Auto-Chat-Plugin
  * Description:       A premium, customizable WhatsApp chat widget for your WordPress site.
  * Version:           1.0.0
- * Author:            Antigravity
+ * Author:            Dheeraj Singh
  * Author URI:        https://google.com
  * Text Domain:       smart-whatsapp-chat-widget
  * License:           GPL-2.0+

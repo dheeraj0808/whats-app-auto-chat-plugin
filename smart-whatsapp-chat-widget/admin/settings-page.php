@@ -51,12 +51,14 @@ add_action( 'admin_init', 'swcw_register_settings' );
  * Add Menu Page
  */
 function swcw_add_admin_menu() {
-    add_options_page(
+    add_menu_page(
         'Smart WhatsApp Chat Widget',
         'WhatsApp Widget',
         'manage_options',
         'smart-whatsapp-chat-widget',
-        'swcw_settings_page_html'
+        'swcw_settings_page_html',
+        'dashicons-admin-comments', // Standard chat icon
+        100 // Position
     );
 }
 add_action( 'admin_menu', 'swcw_add_admin_menu' );
