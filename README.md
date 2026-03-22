@@ -48,6 +48,10 @@ new WhatsAppPlugin({
 | `autoOpen` | Boolean | `false` | Whether to open the widget automatically on load. |
 | `avatar` | String | `(generic icon)` | URL to the avatar image. |
 
+## Author
+**Dheeraj Singh**
+[GitHub Profile](https://github.com/dheeraj0808)
+
 ## License
 MIT
-# What-s-app-Auto-Chat-Plugin
+# Whats-app-Auto-Chat-Plugin
