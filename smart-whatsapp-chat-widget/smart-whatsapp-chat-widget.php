@@ -100,19 +100,67 @@ function swcw_inject_widget() {
                 </div>
                 
                 <?php
-                // Render FAQs if they exist
+                // Parse hierarchical FAQ tree
                 $faqs_str = !empty($options['faqs']) ? $options['faqs'] : '';
-                if ($faqs_str):
+                $faq_tree = array();
+                
+                if ($faqs_str) {
                     $lines = explode("\n", str_replace("\r", "", $faqs_str));
-                    echo '<div class="swcw-faq-container">';
+                    $counter = 0;
+                    $stack = array(); // Stack to track parent at each depth
+                    
                     foreach ($lines as $line) {
-                        if (strpos($line, '|') !== false) {
-                            list($q, $a) = explode('|', $line, 2);
-                            echo '<button class="swcw-faq-chip" data-answer="' . esc_attr(trim($a)) . '">' . esc_html(trim($q)) . '</button>';
+                        $trimmed = rtrim($line);
+                        if (empty($trimmed)) continue;
+                        if (strpos($trimmed, '|') === false) continue;
+                        
+                        // Count leading '>' to determine depth
+                        $depth = 0;
+                        $clean = $trimmed;
+                        while (isset($clean[0]) && $clean[0] === '>') {
+                            $depth++;
+                            $clean = substr($clean, 1);
+                        }
+                        $clean = trim($clean);
+                        
+                        $parts = explode('|', $clean, 2);
+                        if (count($parts) < 2) continue;
+                        
+                        $node = array(
+                            'id' => 'faq_' . $counter,
+                            'question' => trim($parts[0]),
+                            'answer' => trim($parts[1]),
+                            'children' => array(),
+                        );
+                        $counter++;
+                        
+                        if ($depth === 0) {
+                            // Root level
+                            $faq_tree[] = $node;
+                            $stack = array(&$faq_tree[count($faq_tree) - 1]);
+                        } else {
+                            // Child level — attach to parent at ($depth - 1)
+                            $parent_depth = $depth - 1;
+                            if (isset($stack[$parent_depth])) {
+                                $stack[$parent_depth]['children'][] = $node;
+                                // Update stack at current depth
+                                $children_count = count($stack[$parent_depth]['children']);
+                                $stack[$depth] = &$stack[$parent_depth]['children'][$children_count - 1];
+                                // Trim stack beyond current depth
+                                $stack = array_slice($stack, 0, $depth + 1);
+                            }
                         }
                     }
-                    echo '</div>';
-                endif;
+                    
+                    // Render root-level chips server-side as initial state
+                    if (!empty($faq_tree)) {
+                        echo '<div class="swcw-faq-container">';
+                        foreach ($faq_tree as $root_node) {
+                            echo '<button class="swcw-faq-chip" data-faq-id="' . esc_attr($root_node['id']) . '">' . esc_html($root_node['question']) . '</button>';
+                        }
+                        echo '</div>';
+                    }
+                }
                 ?>
             </div>
             <div class="swcw-footer">
@@ -133,6 +181,9 @@ function swcw_inject_widget() {
             </svg>
         </div>
     </div>
+    <?php if (!empty($faq_tree)): ?>
+    <script>var swcwFaqTree = <?php echo json_encode($faq_tree); ?>;</script>
+    <?php endif; ?>
     <?php
 }
 add_action( 'wp_footer', 'swcw_inject_widget' );

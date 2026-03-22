@@ -130,8 +130,25 @@ function swcw_field_cb($args) {
             echo '<input type="number" name="swcw_settings[delay]" value="' . esc_attr($value ?: 0) . '" class="small-text"> seconds';
             break;
         case 'faqs':
-            echo '<textarea name="swcw_settings[faqs]" rows="5" class="large-text" placeholder="Price?|Our price starts from $10.&#10;Services?|We provide Web Design and SEO.">' . esc_textarea($value) . '</textarea>';
-            echo '<p class="description">Har line par ek sawal aur uska jawab likhein (Format: Question|Answer).</p>';
+            echo '<textarea name="swcw_settings[faqs]" rows="10" class="large-text" placeholder="Price|Our prices start from ₹250&#10;>Basic Plan|₹250/month with essential features&#10;>Pro Plan|₹500/month with premium features&#10;Services|We offer multiple services&#10;>Web Design|Professional website design&#10;>SEO|Search engine optimization&#10;Contact|Reach us at contact@example.com">' . esc_textarea($value) . '</textarea>';
+            echo '<div class="swcw-faq-help" style="background:#f0f7f4;border-left:4px solid #25D366;padding:12px 16px;margin-top:10px;border-radius:4px;font-size:13px;line-height:1.8;">';
+            echo '<strong style="color:#075e54;">📖 Hierarchical FAQ Format:</strong><br>';
+            echo '<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">Question|Answer</code> — Root level question<br>';
+            echo '<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">>Sub Question|Answer</code> — Sub question (child of above root)<br>';
+            echo '<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">>>Sub Sub Question|Answer</code> — Deeper level child<br><br>';
+            echo '<strong>Example:</strong><br>';
+            echo '<pre style="background:#fff;padding:10px;border-radius:6px;border:1px solid #ddd;font-size:12px;margin-top:5px;overflow-x:auto;">';
+            echo "Price|Our prices start from ₹250\n";
+            echo ">Basic Plan|₹250/month with essential features\n";
+            echo ">Pro Plan|₹500/month with premium features\n";
+            echo ">>Pro Monthly|₹500 billed monthly\n";
+            echo ">>Pro Yearly|₹5000 billed yearly (save ₹1000!)\n";
+            echo "Services|We offer multiple services\n";
+            echo ">Web Design|Professional website design\n";
+            echo ">SEO|Search engine optimization\n";
+            echo "Contact|Reach us at contact@example.com";
+            echo '</pre>';
+            echo '</div>';
             break;
         default:
             echo '<input type="text" name="swcw_settings[' . $id . ']" value="' . esc_attr($value) . '" class="regular-text">';

@@ -225,6 +225,48 @@
     to { opacity: 1; transform: translateX(0); }
 }
 
+/* Typing Indicator */
+.swcw-typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    padding: 12px 18px;
+    border-radius: 0 15px 15px 15px;
+    max-width: 70px;
+    margin-top: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    animation: swcwFadeInLeft 0.3s ease;
+}
+
+.swcw-typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: #90949c;
+    border-radius: 50%;
+    display: inline-block;
+    animation: swcwTypingBounce 1.4s infinite ease-in-out both;
+}
+
+.swcw-typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.swcw-typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.swcw-typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes swcwTypingBounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* Dynamic FAQ Chips (rendered by JS) */
+.swcw-faq-dynamic {
+    animation: swcwFadeInUp 0.4s ease;
+}
+
+@keyframes swcwFadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .swcw-time {
     display: block;
     font-size: 10px;
