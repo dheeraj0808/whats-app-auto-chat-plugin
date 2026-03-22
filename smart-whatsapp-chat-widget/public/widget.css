@@ -46,6 +46,23 @@
     pointer-events: none;
 }
 
+/* Pulsating Animation */
+.swcw-pulse {
+    animation: swcwPulse 2s infinite;
+}
+
+@keyframes swcwPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}
+
 /* Window */
 .swcw-window {
     width: 350px;

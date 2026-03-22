@@ -30,6 +30,7 @@ function swcw_register_settings() {
         'position'        => 'Widget Position',
         'btn_color'       => 'Button Color',
         'logo_url'        => 'Company Logo',
+        'blinking'        => 'Enable Pulse Animation',
         'auto_open'       => 'Widget Auto Open',
         'delay'           => 'Delay Before Opening (seconds)',
         'faqs'            => 'Quick FAQs (Question|Answer)',
@@ -78,6 +79,7 @@ function swcw_sanitize_settings($input) {
     $output['position'] = in_array($input['position'], array('right', 'left')) ? $input['position'] : 'right';
     $output['btn_color'] = sanitize_hex_color($input['btn_color']);
     $output['logo_url'] = esc_url_raw($input['logo_url']);
+    $output['blinking'] = isset($input['blinking']) ? 'on' : 'off';
     $output['auto_open'] = isset($input['auto_open']) ? 'yes' : 'no';
     $output['delay'] = absint($input['delay']);
     $output['faqs'] = sanitize_textarea_field($input['faqs']);
@@ -117,6 +119,10 @@ function swcw_field_cb($args) {
             echo '<input type="text" id="swcw_logo_url" name="swcw_settings[logo_url]" value="' . esc_url($value) . '" class="regular-text">';
             echo ' <button type="button" class="button" id="swcw_upload_btn">Upload/Select Image</button>';
             break;
+        case 'blinking':
+            echo '<input type="checkbox" name="swcw_settings[blinking]" ' . checked($value, 'on', false) . '>';
+            echo '<p class="description">Adds an attention-grabbing pulse effect to the button.</p>';
+            break;
         case 'auto_open':
             echo '<input type="checkbox" name="swcw_settings[auto_open]" ' . checked($value, 'yes', false) . '>';
             break;
@@ -139,15 +145,68 @@ function swcw_field_cb($args) {
 function swcw_settings_page_html() {
     if ( ! current_user_can( 'manage_options' ) ) return;
     ?>
+    <style>
+        .swcw-admin-wrap {
+            max-width: 800px;
+            margin-top: 30px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .swcw-admin-wrap h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+        .form-table th {
+            font-weight: 600;
+            color: #444;
+            padding: 25px 10px;
+            width: 250px;
+        }
+        .form-table td {
+            padding: 20px 10px;
+        }
+        .regular-text, .large-text {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            background: #fafafa;
+        }
+        .regular-text:focus, .large-text:focus {
+            border-color: #25D366;
+            box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.1);
+            background: #fff;
+        }
+        .wp-core-ui .button-primary {
+            background: #25D366;
+            border-color: #25D366;
+            padding: 10px 30px;
+            height: auto;
+            border-radius: 100px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .wp-core-ui .button-primary:hover {
+            background: #0b6b63;
+            border-color: #0b6b63;
+        }
+    </style>
     <div class="wrap">
-        <h1>Smart WhatsApp Chat Widget</h1>
-        <form action="options.php" method="post">
-            <?php
-            settings_fields( 'swcw_settings_group' );
-            do_settings_sections( 'smart-whatsapp-chat-widget' );
-            submit_button();
-            ?>
-        </form>
+        <div class="swcw-admin-wrap">
+            <h1>Smart WhatsApp Chat Widget</h1>
+            <form action="options.php" method="post">
+                <?php
+                settings_fields( 'swcw_settings_group' );
+                do_settings_sections( 'smart-whatsapp-chat-widget' );
+                submit_button('Save Widget Settings');
+                ?>
+            </form>
+        </div>
     </div>
     <script>
     jQuery(document).ready(function($){
