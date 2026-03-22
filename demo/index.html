@@ -3,199 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium WhatsApp Chat Plugin Demo</title>
-    <!-- Modern Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    
+    <title>Smart WhatsApp Chat Widget — Live Demo</title>
+    <link rel="stylesheet" href="../smart-whatsapp-chat-widget/public/widget.css">
     <style>
-        :root {
-            --primary: #0b6b63;
-            --secondary: #25D366;
-            --dark: #1a1a1a;
-            --light: #f8f9fa;
-        }
+        /* Demo page styling */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-        }
-
-        h1, h2, h3 {
-            font-family: 'Outfit', sans-serif;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            color: #fff;
+        }
+
+        .demo-card {
             text-align: center;
-            background: radial-gradient(circle at top right, #e6fffb 0%, #ffffff 50%, #f0f7f4 100%);
-            padding: 0 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: "";
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: var(--secondary);
-            filter: blur(150px);
-            opacity: 0.1;
-            top: -100px;
-            left: -100px;
-            border-radius: 50%;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: fadeInDown 1s ease;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #666;
             max-width: 600px;
-            margin-bottom: 40px;
-            animation: fadeInUp 1s ease 0.2s backwards;
+            padding: 50px 40px;
         }
 
-        .badge {
-            background: rgba(37, 211, 102, 0.1);
-            color: var(--secondary);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+        .demo-card h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .demo-card p {
+            font-size: 18px;
+            opacity: 0.85;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .demo-card .badge {
             display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 6px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
         }
 
-        /* Features */
-        .features {
-            padding: 100px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        .demo-card .arrow {
+            margin-top: 40px;
+            font-size: 28px;
+            animation: bounce 1.5s infinite;
         }
 
-        .features h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 60px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease;
-            border: 1px solid #f0f0f0;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            font-size: 1.5rem;
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(12px); }
         }
     </style>
 </head>
 <body>
 
-    <section class="hero">
-        <span class="badge">Version 1.0 is here</span>
-        <h1>WhatsApp Connect</h1>
-        <p>The most elegant way to connect with your customers via WhatsApp. Fully customizable, lightweight, and incredibly fast.</p>
-        <div style="font-size: 0.9rem; color: #999;">Look at the bottom right corner &rarr;</div>
-    </section>
+    <div class="demo-card">
+        <div class="badge">LIVE PREVIEW</div>
+        <h1>Smart WhatsApp Chat Widget</h1>
+        <p>Click the WhatsApp button in the bottom-right corner to test the interactive FAQ chatbot with hierarchical navigation.</p>
+        <div class="arrow">↘</div>
+    </div>
 
-    <section class="features">
-        <h2>Why use this plugin?</h2>
-        <div class="grid">
-            <div class="card">
-                <div class="card-icon">⚡</div>
-                <h3>Blazing Fast</h3>
-                <p>Zero dependencies, pure vanilla JS and CSS. Optimized for performance and SEO.</p>
+    <!-- ═══════════════════════════════════════
+         Widget HTML (mirrors public/widget.php)
+         ═══════════════════════════════════════ -->
+    <div class="swcw-container swcw-pos-right" id="swcwWidgetContainer" style="--swcw-btn-color: #25D366;">
+
+        <!-- Chat Window -->
+        <div class="swcw-window" id="swcwWindow">
+
+            <!-- Header -->
+            <div class="swcw-header">
+                <div class="swcw-header-left">
+                    <div class="swcw-avatar">
+                        <svg viewBox="0 0 212 212" width="44" height="44"><path fill="#DFE5E7" d="M106.251.5C164.653.5 212 47.846 212 106.25S164.653 212 106.25 212C47.846 212 .5 164.654.5 106.25S47.846.5 106.251.5z"/><path fill="#FFF" d="M173.561 171.615a62.767 62.767 0 0 0-2.065-2.955 67.7 67.7 0 0 0-2.608-3.299 70.112 70.112 0 0 0-3.184-3.527 71.097 71.097 0 0 0-5.924-5.47 72.458 72.458 0 0 0-10.204-7.027 75.2 75.2 0 0 0-5.98-3.055c-.281-.121-.563-.238-.849-.351a74.907 74.907 0 0 0-3.888-1.459c0-.012 0-.024-.005-.036a53.03 53.03 0 0 1-2.445-1.327c-.283-.399-.564-.801-.838-1.21a47.79 47.79 0 0 1-1.913-3.071 53.07 53.07 0 0 1-1.592-3.106 51.07 51.07 0 0 1-2.752-8.045 51.929 51.929 0 0 1-1.15-7.32 52.36 52.36 0 0 1-.084-7.607 52.35 52.35 0 0 1 .874-6.84 51.6 51.6 0 0 1 3.579-11.397 47.156 47.156 0 0 1 3.07-5.395c.455-.679.927-1.345 1.413-1.995a56.835 56.835 0 0 1 1.703-7.31c.161-.541.312-1.098.448-1.671.137-.574.261-1.163.368-1.764a47.53 47.53 0 0 0 .544-5.028 46.52 46.52 0 0 0-.012-4.643c-.076-.84-.186-1.657-.326-2.447a30.593 30.593 0 0 0-.533-2.317c-.219-.746-.47-1.461-.752-2.135-.282-.675-.594-1.311-.935-1.899-.34-.588-.711-1.127-1.11-1.607a12.487 12.487 0 0 0-1.312-1.37 10.247 10.247 0 0 0-1.533-1.092 8.79 8.79 0 0 0-1.787-.793 8.048 8.048 0 0 0-2.063-.424 8.394 8.394 0 0 0-2.373.108 9.862 9.862 0 0 0-2.726.87 13.42 13.42 0 0 0-3.125 2.072 18.888 18.888 0 0 0-3.537 4.382c-.535.849-1.034 1.774-1.492 2.77a35.06 35.06 0 0 0-1.218 3.278c-.354 1.146-.659 2.351-.91 3.607a48.487 48.487 0 0 0-.66 7.971c-.013.97.001 1.939.043 2.906a50.66 50.66 0 0 0 .473 5.704c.103.684.22 1.363.354 2.037.133.672.282 1.339.446 2a53.27 53.27 0 0 0 2.107 6.777c.258.646.528 1.281.808 1.903.28.622.571 1.233.872 1.831a48.94 48.94 0 0 0 1.89 3.389 44.39 44.39 0 0 0 2.037 3.03c.352.469.713.928 1.085 1.376-.119 2.033-.335 4.053-.648 6.054a74.44 74.44 0 0 1-1.414 6.617c-.561 2.134-1.222 4.209-1.974 6.212a69.31 69.31 0 0 1-1.254 3.106 71.35 71.35 0 0 1-1.41 3.063 73.32 73.32 0 0 1-5.441 9.22 75.66 75.66 0 0 1-2.935 3.869 77.11 77.11 0 0 1-2.165 2.529 73.09 73.09 0 0 1-3.393 3.545 75.384 75.384 0 0 1-5.713 5.008 76.735 76.735 0 0 1-4.692 3.44 75.87 75.87 0 0 1-3.292 2.058c-.377.215-.753.424-1.13.624 49.18 1.212 88.785-38.88 90.543-88.102z"/></svg>
+                        <span class="swcw-online-dot"></span>
+                    </div>
+                    <div class="swcw-header-info">
+                        <h4>Demo Support</h4>
+                        <p>Usually replies within minutes</p>
+                    </div>
+                </div>
+                <button class="swcw-close-btn" id="swcwClose" aria-label="Close chat">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </div>
-            <div class="card">
-                <div class="card-icon">🎨</div>
-                <h3>Fully Customizable</h3>
-                <p>Change colors, names, avatars, and messages to match your brand identity perfectly.</p>
+
+            <!-- Body -->
+            <div class="swcw-body" id="swcwBody">
+                <div class="swcw-bubble swcw-bubble--bot">
+                    <div class="swcw-bubble__content">
+                        Hello! 👋 Welcome to our demo. How can we help you today?
+                        <span class="swcw-bubble__time">12:00</span>
+                    </div>
+                </div>
             </div>
-            <div class="card">
-                <div class="card-icon">📱</div>
-                <h3>Responsive</h3>
-                <p>Works flawlessly on desktops, tablets, and smartphones. Mobile-first approach.</p>
+
+            <!-- Footer -->
+            <div class="swcw-footer">
+                <div class="swcw-input-group">
+                    <input type="text" id="swcwInput" placeholder="Type your message..." autocomplete="off">
+                    <button id="swcwSend" data-number="919999999999" aria-label="Send message">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="swcw-powered">Powered by WhatsApp</p>
             </div>
         </div>
-    </section>
 
-    <!-- Plugin Implementation -->
-    <script src="../src/whatsapp-plugin.js"></script>
+        <!-- Trigger Button -->
+        <div class="swcw-trigger swcw-pulse" id="swcwTrigger" aria-label="Open WhatsApp chat">
+            <svg viewBox="0 0 48 48" width="34" height="34" fill="none">
+                <path d="M24 4C12.954 4 4 12.954 4 24c0 3.535.93 6.94 2.696 9.953L4.004 43.99l10.27-2.694A19.93 19.93 0 0024 44c11.046 0 20-8.954 20-20S35.046 4 24 4z" fill="#25D366"/>
+                <path d="M24 7.2c-9.26 0-16.8 7.54-16.8 16.8 0 2.96.77 5.84 2.24 8.39l.34.57-1.44 5.27 5.4-1.42.55.33A16.72 16.72 0 0024 40.8c9.26 0 16.8-7.54 16.8-16.8S33.26 7.2 24 7.2z" fill="#fff"/>
+                <path d="M17.472 14.382c-.372-.828-.764-.845-1.118-.86l-.954-.013c-.33 0-.868.124-1.322.618-.454.495-1.735 1.696-1.735 4.133s1.776 4.795 2.025 5.126c.248.33 3.43 5.495 8.467 7.489 4.185 1.657 5.038 1.327 5.946 1.245.908-.083 2.929-1.198 3.341-2.355.413-1.157.413-2.148.289-2.355-.124-.206-.454-.33-.95-.578-.495-.248-2.928-1.445-3.382-1.61-.454-.166-.784-.249-1.114.248-.33.495-1.28 1.61-1.569 1.94-.289.33-.578.372-1.073.124-.496-.248-2.092-.771-3.986-2.46-1.474-1.314-2.468-2.938-2.758-3.434-.289-.495-.03-.763.218-1.01.222-.222.495-.578.743-.868.248-.289.33-.495.496-.826.165-.33.082-.619-.042-.868-.124-.248-1.095-2.694-1.527-3.682z" fill="#25D366"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Demo FAQ Tree Data -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            new WhatsAppPlugin({
-                phoneNumber: '911234567890', // Replace with your number
-                displayName: 'Metrodent India',
-                statusText: 'Usually reply within 1 minute',
-                welcomeMessage: 'Welcome to Metrodent India! 👋<br>How can we help you today? 😊',
-                themeColor: '#0b6b63',
-                buttonColor: '#25D366',
-                autoOpen: true // Opens automatically on demo
-            });
-        });
+        var swcwFaqTree = [
+            {
+                "id": "faq_0",
+                "question": "💰 Pricing",
+                "answer": "Here are our pricing plans. Choose the one that fits your needs:",
+                "children": [
+                    {
+                        "id": "faq_1",
+                        "question": "Basic Plan",
+                        "answer": "₹999/month — Includes core features, email support, and up to 1,000 contacts.",
+                        "children": []
+                    },
+                    {
+                        "id": "faq_2",
+                        "question": "Premium Plan",
+                        "answer": "₹1,999/month — Everything in Basic plus priority support, analytics, and unlimited contacts.",
+                        "children": [
+                            {
+                                "id": "faq_3",
+                                "question": "Monthly Billing",
+                                "answer": "₹1,999 billed every month. Cancel anytime.",
+                                "children": []
+                            },
+                            {
+                                "id": "faq_4",
+                                "question": "Annual Billing",
+                                "answer": "₹19,999/year — Save ₹3,989! That's 2 months free. 🎉",
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "id": "faq_5",
+                        "question": "Enterprise",
+                        "answer": "Custom pricing for large teams. Contact us at sales@example.com for a quote.",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "faq_6",
+                "question": "🛠 Support",
+                "answer": "We're here to help! What do you need assistance with?",
+                "children": [
+                    {
+                        "id": "faq_7",
+                        "question": "Technical Issue",
+                        "answer": "Please describe your technical issue and we'll get back to you within 24 hours. Email: tech@example.com",
+                        "children": []
+                    },
+                    {
+                        "id": "faq_8",
+                        "question": "Billing Question",
+                        "answer": "For billing inquiries, email billing@example.com or reply here with your order ID.",
+                        "children": []
+                    },
+                    {
+                        "id": "faq_9",
+                        "question": "Feature Request",
+                        "answer": "We love hearing your ideas! Submit feature requests at feedback.example.com 💡",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "faq_10",
+                "question": "📞 Contact Us",
+                "answer": "Reach us anytime:\n📧 hello@example.com\n📱 +91 99999 99999\n🕐 Mon–Fri, 9 AM – 6 PM IST",
+                "children": []
+            },
+            {
+                "id": "faq_11",
+                "question": "📚 About Us",
+                "answer": "We are a leading SaaS company helping 10,000+ businesses automate their customer support. Founded in 2020.",
+                "children": [
+                    {
+                        "id": "faq_12",
+                        "question": "Our Team",
+                        "answer": "A passionate team of 50+ engineers, designers, and support specialists. 🚀",
+                        "children": []
+                    },
+                    {
+                        "id": "faq_13",
+                        "question": "Careers",
+                        "answer": "We're hiring! Check open positions at careers.example.com 🎯",
+                        "children": []
+                    }
+                ]
+            }
+        ];
+
+        // No auto-open for demo — just let users click.
+        var swcwSettings = { autoOpen: 'no', delay: 0 };
     </script>
+    <script src="../smart-whatsapp-chat-widget/public/widget.js"></script>
 </body>
 </html>

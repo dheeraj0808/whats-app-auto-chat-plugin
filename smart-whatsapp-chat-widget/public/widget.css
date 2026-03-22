@@ -1,43 +1,86 @@
 /**
- * Frontend Styling for Smart WhatsApp Chat Widget
+ * Smart WhatsApp Chat Widget — Premium Stylesheet
+ *
+ * @package SmartWhatsAppChatWidget
+ * @version 2.0.0
+ *
+ * Sections:
+ *   1. Container & Positioning
+ *   2. Trigger Button
+ *   3. Chat Window
+ *   4. Header
+ *   5. Chat Body
+ *   6. Message Bubbles
+ *   7. FAQ Chips
+ *   8. Typing Indicator
+ *   9. Footer / Input
+ *  10. Animations & Keyframes
+ *  11. Responsive
  */
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   1.  CONTAINER & POSITIONING
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .swcw-container {
     position: fixed;
-    bottom: 25px;
-    z-index: 999999;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    bottom: 24px;
+    z-index: 2147483647; /* Always on top */
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.swcw-container * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 .swcw-pos-right {
-    right: 25px;
+    right: 24px;
 }
 
 .swcw-pos-left {
-    left: 25px;
+    left: 24px;
 }
 
-/* Trigger Button */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   2.  TRIGGER BUTTON
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .swcw-trigger {
-    width: 60px;
-    height: 60px;
+    width: 62px;
+    height: 62px;
     border-radius: 50%;
-    background-color: var(--swcw-btn-color, #25D366);
+    background: var(--swcw-btn-color, #25D366);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    transition: all 0.3s ease;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.35s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+                opacity 0.3s ease,
+                box-shadow 0.3s ease;
+    will-change: transform;
 }
 
 .swcw-trigger:hover {
-    transform: scale(1.1);
+    transform: scale(1.12);
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.2),
+        0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.swcw-trigger:active {
+    transform: scale(0.95);
 }
 
 .swcw-trigger svg {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 .swcw-trigger.swcw-hidden {
@@ -46,280 +89,488 @@
     pointer-events: none;
 }
 
-/* Pulsating Animation */
+/* Pulse Animation */
 .swcw-pulse {
-    animation: swcwPulse 2s infinite;
+    animation: swcwPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes swcwPulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55);
     }
     70% {
-        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+        box-shadow: 0 0 0 18px rgba(37, 211, 102, 0);
     }
     100% {
         box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
     }
 }
 
-/* Window */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   3.  CHAT WINDOW
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .swcw-window {
-    width: 350px;
-    max-width: 90vw;
-    background: #efeae2;
-    border-radius: 12px;
+    width: 370px;
+    max-width: 92vw;
+    max-height: 520px;
+    background: #e5ddd5;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+    box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
     display: none;
     flex-direction: column;
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
+    transform: translateY(20px) scale(0.95);
+    transition: opacity 0.35s ease,
+                transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .swcw-window.swcw-active {
     display: flex;
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
-/* Header */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   4.  HEADER
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .swcw-header {
-    background: #075e54;
-    color: white;
-    padding: 15px 20px;
+    background: linear-gradient(135deg, #075e54 0%, #128c7e 100%);
+    color: #fff;
+    padding: 16px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Subtle gradient overlay on header */
+.swcw-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #25D366, #128c7e, #075e54);
 }
 
 .swcw-header-left {
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
 }
 
-.swcw-logo-box {
-    width: 45px;
-    height: 45px;
-    background: white;
+/* Avatar with online indicator */
+.swcw-avatar {
+    position: relative;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+.swcw-avatar img,
+.swcw-avatar svg {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+.swcw-online-dot {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 12px;
+    height: 12px;
+    background: #25D366;
+    border: 2px solid #075e54;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.swcw-header-info {
+    min-width: 0;
+}
+
+.swcw-header-info h4 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.swcw-header-info p {
+    font-size: 12px;
+    opacity: 0.8;
+    line-height: 1.3;
+    margin-top: 2px;
+}
+
+.swcw-close-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.swcw-logo-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.swcw-header-text h4 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.swcw-header-text p {
-    margin: 2px 0 0;
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-.swcw-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 28px;
     cursor: pointer;
-    line-height: 1;
+    transition: background 0.2s, transform 0.2s;
+    flex-shrink: 0;
 }
 
-/* Body */
+.swcw-close-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: rotate(90deg);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   5.  CHAT BODY
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .swcw-body {
-    padding: 20px;
-    height: 300px;
+    flex: 1;
+    padding: 16px 14px;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-    background-size: contain;
+    gap: 6px;
+    min-height: 280px;
+    max-height: 340px;
+
+    /* WhatsApp-style background pattern */
+    background-color: #e5ddd5;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4cdc4' fill-opacity='0.25'%3E%3Cpath d='M0 0h10v10H0zM20 20h10v10H20zM40 40h10v10H40zM60 60h10v10H60zM10 30h10v10H10zM30 10h10v10H30zM50 50h10v10H50zM70 30h10v10H70zM30 50h10v10H30zM50 10h10v10H50zM70 70h10v10H70zM10 70h10v10H10z' /%3E%3C/g%3E%3C/svg%3E");
 }
 
-.swcw-msg-bubble {
-    background: white;
-    padding: 10px 15px;
-    border-radius: 0 15px 15px 15px;
-    font-size: 14px;
-    color: #333;
+/* Custom scrollbar */
+.swcw-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.swcw-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.swcw-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   6.  MESSAGE BUBBLES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Bot Bubble (left, white) */
+.swcw-bubble--bot {
+    align-self: flex-start;
     max-width: 85%;
+    animation: swcwSlideInLeft 0.35s ease;
+}
+
+.swcw-bubble--bot .swcw-bubble__content {
+    background: #ffffff;
+    color: #303030;
+    padding: 10px 14px;
+    border-radius: 0 12px 12px 12px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
     position: relative;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     word-wrap: break-word;
 }
 
-/* FAQ Chips */
-.swcw-faq-container {
-    margin-top: 15px;
+/* White triangle tail */
+.swcw-bubble--bot .swcw-bubble__content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -7px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #ffffff;
+    border-left: 8px solid transparent;
+}
+
+/* User Bubble (right, green) */
+.swcw-bubble--user {
+    align-self: flex-end;
+    max-width: 85%;
+    animation: swcwSlideInRight 0.35s ease;
+}
+
+.swcw-bubble--user .swcw-bubble__content {
+    background: #dcf8c6;
+    color: #303030;
+    padding: 10px 14px;
+    border-radius: 12px 0 12px 12px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+    position: relative;
+    word-wrap: break-word;
+}
+
+/* Green triangle tail */
+.swcw-bubble--user .swcw-bubble__content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -7px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #dcf8c6;
+    border-right: 8px solid transparent;
+}
+
+.swcw-bubble__time {
+    display: block;
+    font-size: 10px;
+    color: #8e8e8e;
+    text-align: right;
+    margin-top: 4px;
+    line-height: 1;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   7.  FAQ CHIPS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.swcw-faq-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin-top: 10px;
+    animation: swcwFadeInUp 0.4s ease;
 }
 
-.swcw-faq-chip {
-    background: white;
-    border: 1px solid #25D366;
+.swcw-chip {
+    background: #ffffff;
+    border: 1.5px solid #25D366;
     color: #075e54;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 12.5px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.22s ease;
+    line-height: 1.3;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.swcw-chip:hover {
+    background: #25D366;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.28);
+}
+
+.swcw-chip:active {
+    transform: scale(0.96);
+}
+
+/* "⬅ Back to Menu" chip */
+.swcw-chip--back {
+    background: #f0f2f5;
+    border-color: #b0b3b8;
+    color: #555;
     font-weight: 500;
 }
 
-.swcw-faq-chip:hover {
-    background: #25D366;
-    color: white;
+.swcw-chip--back:hover {
+    background: #e4e6eb;
+    color: #333;
+    border-color: #999;
+    box-shadow: none;
 }
 
-/* Bot Answer Bubble (Left side) */
-.swcw-bot-reply {
-    margin-top: 15px;
-    background: white;
-    padding: 10px 15px;
-    border-radius: 0 15px 15px 15px;
-    font-size: 14px;
-    color: #333;
-    max-width: 85%;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   8.  TYPING INDICATOR
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.swcw-typing {
     align-self: flex-start;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    animation: swcwFadeInLeft 0.3s ease;
-}
-
-/* User Message Bubble (Right side) */
-.swcw-user-msg {
-    margin-top: 15px;
-    background: #dcf8c6;
-    padding: 10px 15px;
-    border-radius: 15px 0 15px 15px;
-    font-size: 14px;
-    color: #333;
-    max-width: 85%;
-    align-self: flex-end;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    animation: swcwFadeInRight 0.3s ease;
-}
-
-@keyframes swcwFadeInLeft {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes swcwFadeInRight {
-    from { opacity: 0; transform: translateX(10px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-/* Typing Indicator */
-.swcw-typing-indicator {
     display: flex;
-    align-items: center;
-    gap: 4px;
-    background: white;
+    gap: 5px;
+    background: #fff;
     padding: 12px 18px;
-    border-radius: 0 15px 15px 15px;
-    max-width: 70px;
-    margin-top: 12px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    animation: swcwFadeInLeft 0.3s ease;
+    border-radius: 0 12px 12px 12px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+    animation: swcwSlideInLeft 0.25s ease;
 }
 
-.swcw-typing-indicator span {
+.swcw-typing span {
     width: 8px;
     height: 8px;
     background: #90949c;
     border-radius: 50%;
-    display: inline-block;
-    animation: swcwTypingBounce 1.4s infinite ease-in-out both;
-}
-
-.swcw-typing-indicator span:nth-child(1) { animation-delay: 0s; }
-.swcw-typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-.swcw-typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes swcwTypingBounce {
-    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-    40% { transform: scale(1); opacity: 1; }
-}
-
-/* Dynamic FAQ Chips (rendered by JS) */
-.swcw-faq-dynamic {
-    animation: swcwFadeInUp 0.4s ease;
-}
-
-@keyframes swcwFadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.swcw-time {
     display: block;
-    font-size: 10px;
-    color: #999;
-    text-align: right;
-    margin-top: 4px;
+    animation: swcwTypingDot 1.4s infinite ease-in-out both;
 }
 
-/* Footer */
+.swcw-typing span:nth-child(1) { animation-delay: 0s; }
+.swcw-typing span:nth-child(2) { animation-delay: 0.2s; }
+.swcw-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   9.  FOOTER / INPUT
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .swcw-footer {
-    padding: 15px;
+    padding: 10px 14px 8px;
     background: #f0f2f5;
+    flex-shrink: 0;
 }
 
-.swcw-input-wrap {
+.swcw-input-group {
     display: flex;
-    background: white;
-    border-radius: 30px;
-    padding: 5px 15px;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    background: #fff;
+    border-radius: 100px;
+    padding: 4px 8px 4px 18px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.swcw-input-wrap input {
+.swcw-input-group input {
     flex: 1;
     border: none !important;
     outline: none !important;
     background: transparent !important;
-    padding: 8px 0 !important;
     font-size: 14px !important;
+    color: #333 !important;
+    padding: 10px 0 !important;
     box-shadow: none !important;
+    font-family: inherit !important;
+    min-width: 0;
 }
 
-.swcw-input-wrap button {
-    background: none;
+.swcw-input-group input::placeholder {
+    color: #999;
+}
+
+.swcw-input-group button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #25D366;
     border: none;
-    color: #075e54;
-    cursor: pointer;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.15s;
 }
 
-.swcw-input-wrap button svg {
-    width: 24px;
-    height: 24px;
+.swcw-input-group button:hover {
+    background: #128c7e;
 }
 
-/* Mobile Responsive */
+.swcw-input-group button:active {
+    transform: scale(0.92);
+}
+
+.swcw-powered {
+    text-align: center;
+    font-size: 10px;
+    color: #999;
+    margin: 6px 0 2px;
+    letter-spacing: 0.02em;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   10. ANIMATIONS & KEYFRAMES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@keyframes swcwSlideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes swcwSlideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes swcwFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes swcwTypingDot {
+    0%, 80%, 100% {
+        transform: scale(0.5);
+        opacity: 0.35;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   11. RESPONSIVE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 @media (max-width: 480px) {
+    .swcw-container {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0;
+        padding: 0 8px 8px;
+    }
+
+    .swcw-pos-right,
+    .swcw-pos-left {
+        right: auto;
+        left: auto;
+    }
+
     .swcw-window {
-        width: calc(100vw - 30px);
-        bottom: 80px;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        margin-bottom: 0;
+        max-height: 80vh;
+    }
+
+    .swcw-body {
+        max-height: 55vh;
+    }
+
+    .swcw-trigger {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
     }
 }

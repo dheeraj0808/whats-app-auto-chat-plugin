@@ -1,235 +1,313 @@
 /**
- * Frontend JavaScript for Smart WhatsApp Chat Widget
- * Hierarchical FAQ Chatbot System
+ * Smart WhatsApp Chat Widget — Frontend Engine
+ *
+ * Pure Vanilla JS (NO jQuery).
+ * Implements:
+ *   - Hierarchical FAQ chatbot (tree traversal)
+ *   - Typing animation
+ *   - WhatsApp redirection
+ *   - Auto-open logic
+ *
+ * @package SmartWhatsAppChatWidget
+ * @version 2.0.0
  */
 
-(function() {
-    document.addEventListener('DOMContentLoaded', function() {
-        const trigger = document.getElementById('swcwTrigger');
-        const windowEl = document.getElementById('swcwWindow');
-        const closeBtn = document.getElementById('swcwClose');
-        const sendBtn = document.getElementById('swcwSend');
-        const input = document.getElementById('swcwInput');
-        const bodyEl = document.getElementById('swcwBody');
+(function () {
+    'use strict';
 
-        if (!trigger || !windowEl || !closeBtn || !sendBtn || !input || !bodyEl) return;
+    document.addEventListener('DOMContentLoaded', init);
 
-        // Get FAQ tree data from the inline script (set by PHP)
-        let faqTree = [];
+    /* ─── Persistent References ─── */
+    let trigger, chatWindow, closeBtn, sendBtn, inputEl, bodyEl;
+    let faqTree = [];
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       INITIALIZATION
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    function init() {
+        trigger    = document.getElementById('swcwTrigger');
+        chatWindow = document.getElementById('swcwWindow');
+        closeBtn   = document.getElementById('swcwClose');
+        sendBtn    = document.getElementById('swcwSend');
+        inputEl    = document.getElementById('swcwInput');
+        bodyEl     = document.getElementById('swcwBody');
+
+        // Abort if essential elements are missing.
+        if (!trigger || !chatWindow || !closeBtn || !sendBtn || !inputEl || !bodyEl) {
+            return;
+        }
+
+        // Load FAQ tree injected by PHP.
         if (typeof swcwFaqTree !== 'undefined' && Array.isArray(swcwFaqTree)) {
             faqTree = swcwFaqTree;
         }
 
-        /**
-         * Get current time string
-         */
-        const getTimeStr = () => {
-            const now = new Date();
-            return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-        };
-
-        /**
-         * Create typing indicator
-         */
-        const createTypingIndicator = () => {
-            const typing = document.createElement('div');
-            typing.className = 'swcw-typing-indicator';
-            typing.innerHTML = '<span></span><span></span><span></span>';
-            bodyEl.appendChild(typing);
-            bodyEl.scrollTop = bodyEl.scrollHeight;
-            return typing;
-        };
-
-        /**
-         * Create a user message bubble (right side, green)
-         */
-        const createUserBubble = (text) => {
-            const userMsg = document.createElement('div');
-            userMsg.className = 'swcw-user-msg';
-            userMsg.innerHTML = `${text}<span class="swcw-time">${getTimeStr()}</span>`;
-            bodyEl.appendChild(userMsg);
-            bodyEl.scrollTop = bodyEl.scrollHeight;
-        };
-
-        /**
-         * Create a bot reply bubble (left side, white)
-         */
-        const createBotBubble = (text) => {
-            const bot = document.createElement('div');
-            bot.className = 'swcw-bot-reply';
-            bot.innerHTML = `${text}<span class="swcw-time">${getTimeStr()}</span>`;
-            bodyEl.appendChild(bot);
-            bodyEl.scrollTop = bodyEl.scrollHeight;
-            return bot;
-        };
-
-        /**
-         * Render FAQ chips for a given array of FAQ nodes
-         */
-        const renderFaqChips = (nodes) => {
-            if (!nodes || nodes.length === 0) return;
-
-            const container = document.createElement('div');
-            container.className = 'swcw-faq-container swcw-faq-dynamic';
-
-            nodes.forEach((node, index) => {
-                const chip = document.createElement('button');
-                chip.className = 'swcw-faq-chip';
-                chip.setAttribute('data-faq-id', node.id);
-                chip.textContent = node.question;
-                container.appendChild(chip);
-            });
-
-            bodyEl.appendChild(container);
-            bodyEl.scrollTop = bodyEl.scrollHeight;
-        };
-
-        /**
-         * Find a node in the FAQ tree by its ID
-         */
-        const findNodeById = (nodes, id) => {
-            for (const node of nodes) {
-                if (node.id === id) return node;
-                if (node.children && node.children.length > 0) {
-                    const found = findNodeById(node.children, id);
-                    if (found) return found;
-                }
-            }
-            return null;
-        };
-
-        /**
-         * Remove all dynamic FAQ chip containers (so old ones disappear)
-         */
-        const removeOldChips = () => {
-            const oldChips = bodyEl.querySelectorAll('.swcw-faq-dynamic');
-            oldChips.forEach(el => el.remove());
-        };
-
-        /**
-         * Handle FAQ chip click — the core chatbot interaction
-         */
-        const handleFAQClick = (e) => {
-            const chip = e.target.closest('.swcw-faq-chip');
-            if (!chip) return;
-
-            const faqId = chip.getAttribute('data-faq-id');
-            const question = chip.textContent;
-            
-            // If it's the old flat FAQ format (no tree data)
-            if (!faqId && chip.hasAttribute('data-answer')) {
-                const answer = chip.getAttribute('data-answer');
-                createUserBubble(question);
-                removeOldChips();
-                const typingEl = createTypingIndicator();
-                setTimeout(() => {
-                    typingEl.remove();
-                    createBotBubble(answer);
-                }, 800);
-                return;
-            }
-
-            if (!faqId) return;
-
-            // Find the node in the tree
-            const node = findNodeById(faqTree, faqId);
-            if (!node) return;
-
-            // 1. Remove old dynamic chips
-            removeOldChips();
-
-            // 2. Show user question bubble
-            createUserBubble(question);
-
-            // 3. Show typing indicator, then bot answer + sub-chips
-            const typingEl = createTypingIndicator();
-
-            setTimeout(() => {
-                typingEl.remove();
-
-                // 4. Show bot answer
-                createBotBubble(node.answer);
-
-                // 5. If there are children, show them as new chips
-                if (node.children && node.children.length > 0) {
-                    setTimeout(() => {
-                        renderFaqChips(node.children);
-                    }, 300);
-                }
-
-                bodyEl.scrollTop = bodyEl.scrollHeight;
-            }, 800);
-        };
-
-        bodyEl.addEventListener('click', handleFAQClick);
-
-        /**
-         * Render the initial root-level FAQ chips (if tree data exists)
-         */
+        // Render initial root-level FAQ chips.
         if (faqTree.length > 0) {
-            // Remove any server-rendered flat FAQ chips
-            const existingFaqContainers = bodyEl.querySelectorAll('.swcw-faq-container');
-            existingFaqContainers.forEach(el => el.remove());
-
-            // Render root chips
-            renderFaqChips(faqTree);
+            renderFaqChips(faqTree, false); // false = no "Back" button for root
         }
 
-        /**
-         * Open Widget
-         */
-        const openWidget = () => {
-            windowEl.style.display = 'flex';
-            setTimeout(() => {
-                windowEl.classList.add('swcw-active');
-                trigger.classList.add('swcw-hidden');
-            }, 10);
-        };
-
-        /**
-         * Close Widget
-         */
-        const closeWidget = () => {
-            windowEl.classList.remove('swcw-active');
-            setTimeout(() => {
-                windowEl.style.display = 'none';
-                trigger.classList.remove('swcw-hidden');
-            }, 300);
-        };
-
-        /**
-         * Send Message via WhatsApp
-         */
-        const sendMessage = () => {
-            const message = input.value.trim();
-            const number = sendBtn.getAttribute('data-number');
-
-            if (message && number) {
-                const cleanNumber = number.replace(/\D/g, '');
-                const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
-                window.open(url, '_blank');
-            }
-        };
-
-        // Event Listeners
+        // Bind events.
         trigger.addEventListener('click', openWidget);
         closeBtn.addEventListener('click', closeWidget);
-        sendBtn.addEventListener('click', sendMessage);
-        
-        input.addEventListener('keypress', function(e) {
+        sendBtn.addEventListener('click', handleSend);
+        inputEl.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
-                sendMessage();
+                e.preventDefault();
+                handleSend();
             }
         });
 
-        // Auto Open Logic
-        if (typeof swcwRemote !== 'undefined' && swcwRemote.autoOpen === 'yes') {
-            const delay = parseInt(swcwRemote.delay) || 0;
-            setTimeout(() => {
-                if (!windowEl.classList.contains('swcw-active')) {
+        // Delegate clicks on FAQ chips.
+        bodyEl.addEventListener('click', onBodyClick);
+
+        // Auto-open logic.
+        if (typeof swcwSettings !== 'undefined' && swcwSettings.autoOpen === 'yes') {
+            var delay = parseInt(swcwSettings.delay, 10) || 0;
+            setTimeout(function () {
+                if (!chatWindow.classList.contains('swcw-active')) {
                     openWidget();
                 }
             }, delay * 1000);
         }
-    });
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       WIDGET OPEN / CLOSE
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    function openWidget() {
+        chatWindow.style.display = 'flex';
+        // Force reflow so transition plays.
+        void chatWindow.offsetHeight;
+        chatWindow.classList.add('swcw-active');
+        trigger.classList.add('swcw-hidden');
+        scrollToBottom();
+    }
+
+    function closeWidget() {
+        chatWindow.classList.remove('swcw-active');
+        setTimeout(function () {
+            chatWindow.style.display = 'none';
+            trigger.classList.remove('swcw-hidden');
+        }, 350);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SEND MESSAGE → WHATSAPP
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    function handleSend() {
+        var message = inputEl.value.trim();
+        var number  = sendBtn.getAttribute('data-number');
+
+        if (!message || !number) return;
+
+        // Show user bubble inside chat before redirecting.
+        appendUserBubble(message);
+
+        // Clean phone number.
+        var cleanNum = number.replace(/\D/g, '');
+        var url = 'https://wa.me/' + cleanNum + '?text=' + encodeURIComponent(message);
+
+        // Small delay so user sees their bubble, then redirect.
+        setTimeout(function () {
+            window.open(url, '_blank');
+        }, 400);
+
+        inputEl.value = '';
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       BODY CLICK DELEGATION
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    function onBodyClick(e) {
+        var chip = e.target.closest('.swcw-chip');
+        if (!chip) return;
+
+        // "Back to main menu" chip.
+        if (chip.classList.contains('swcw-chip--back')) {
+            handleBackToMenu();
+            return;
+        }
+
+        var faqId = chip.getAttribute('data-faq-id');
+        if (!faqId) return;
+
+        var node = findNodeById(faqTree, faqId);
+        if (!node) return;
+
+        handleFaqSelect(node);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       FAQ CHATBOT ENGINE
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /**
+     * When user clicks an FAQ chip:
+     *  1. Remove old dynamic chips.
+     *  2. Show user bubble with the question text.
+     *  3. Show typing indicator.
+     *  4. After delay, show bot answer + child chips (if any).
+     */
+    function handleFaqSelect(node) {
+        removeAllChips();
+        appendUserBubble(node.question);
+
+        var typing = appendTypingIndicator();
+
+        setTimeout(function () {
+            typing.remove();
+            appendBotBubble(node.answer);
+
+            // If there are children, render them after a short pause.
+            if (node.children && node.children.length > 0) {
+                setTimeout(function () {
+                    renderFaqChips(node.children, true); // true = show back button
+                }, 250);
+            } else {
+                // Leaf node — show "Back to main menu" only.
+                setTimeout(function () {
+                    renderFaqChips([], true);
+                }, 250);
+            }
+
+            scrollToBottom();
+        }, 900);
+    }
+
+    /**
+     * "Back to main menu" resets to root-level FAQ chips.
+     */
+    function handleBackToMenu() {
+        removeAllChips();
+        appendUserBubble('⬅ Main Menu');
+
+        var typing = appendTypingIndicator();
+
+        setTimeout(function () {
+            typing.remove();
+            appendBotBubble('Sure! Here are the main topics:');
+            setTimeout(function () {
+                renderFaqChips(faqTree, false);
+            }, 200);
+            scrollToBottom();
+        }, 600);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       DOM BUILDERS
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /** Bot message bubble (left, white) */
+    function appendBotBubble(text) {
+        var wrap = document.createElement('div');
+        wrap.className = 'swcw-bubble swcw-bubble--bot';
+
+        var content = document.createElement('div');
+        content.className = 'swcw-bubble__content';
+        content.innerHTML = text + '<span class="swcw-bubble__time">' + timeNow() + '</span>';
+
+        wrap.appendChild(content);
+        bodyEl.appendChild(wrap);
+        scrollToBottom();
+        return wrap;
+    }
+
+    /** User message bubble (right, green) */
+    function appendUserBubble(text) {
+        var wrap = document.createElement('div');
+        wrap.className = 'swcw-bubble swcw-bubble--user';
+
+        var content = document.createElement('div');
+        content.className = 'swcw-bubble__content';
+        content.textContent = text;
+
+        var time = document.createElement('span');
+        time.className = 'swcw-bubble__time';
+        time.textContent = timeNow();
+
+        content.appendChild(time);
+        wrap.appendChild(content);
+        bodyEl.appendChild(wrap);
+        scrollToBottom();
+        return wrap;
+    }
+
+    /** Typing indicator ("...") */
+    function appendTypingIndicator() {
+        var el = document.createElement('div');
+        el.className = 'swcw-typing';
+        el.innerHTML = '<span></span><span></span><span></span>';
+        bodyEl.appendChild(el);
+        scrollToBottom();
+        return el;
+    }
+
+    /** Render FAQ chips for a given nodes array. */
+    function renderFaqChips(nodes, showBack) {
+        var container = document.createElement('div');
+        container.className = 'swcw-faq-chips';
+
+        // Individual chips.
+        nodes.forEach(function (node) {
+            var chip = document.createElement('button');
+            chip.className = 'swcw-chip';
+            chip.setAttribute('data-faq-id', node.id);
+            chip.textContent = node.question;
+            container.appendChild(chip);
+        });
+
+        // "Back to main menu" chip.
+        if (showBack) {
+            var back = document.createElement('button');
+            back.className = 'swcw-chip swcw-chip--back';
+            back.textContent = '⬅ Main Menu';
+            container.appendChild(back);
+        }
+
+        bodyEl.appendChild(container);
+        scrollToBottom();
+    }
+
+    /** Remove all current chip containers */
+    function removeAllChips() {
+        var chips = bodyEl.querySelectorAll('.swcw-faq-chips');
+        for (var i = 0; i < chips.length; i++) {
+            chips[i].remove();
+        }
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       UTILITIES
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /** Current time formatted HH:MM */
+    function timeNow() {
+        var d = new Date();
+        return pad(d.getHours()) + ':' + pad(d.getMinutes());
+    }
+
+    function pad(n) {
+        return n < 10 ? '0' + n : '' + n;
+    }
+
+    /** Scroll body to bottom */
+    function scrollToBottom() {
+        setTimeout(function () {
+            bodyEl.scrollTop = bodyEl.scrollHeight;
+        }, 50);
+    }
+
+    /** Recursive tree search by node ID */
+    function findNodeById(nodes, id) {
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].id === id) return nodes[i];
+            if (nodes[i].children && nodes[i].children.length > 0) {
+                var found = findNodeById(nodes[i].children, id);
+                if (found) return found;
+            }
+        }
+        return null;
+    }
+
 })();
