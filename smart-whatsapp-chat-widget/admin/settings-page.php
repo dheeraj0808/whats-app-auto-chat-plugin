@@ -32,6 +32,7 @@ function swcw_register_settings() {
         'logo_url'        => 'Company Logo',
         'auto_open'       => 'Widget Auto Open',
         'delay'           => 'Delay Before Opening (seconds)',
+        'faqs'            => 'Quick FAQs (Question|Answer)',
     );
 
     foreach ( $fields as $id => $title ) {
@@ -79,6 +80,7 @@ function swcw_sanitize_settings($input) {
     $output['logo_url'] = esc_url_raw($input['logo_url']);
     $output['auto_open'] = isset($input['auto_open']) ? 'yes' : 'no';
     $output['delay'] = absint($input['delay']);
+    $output['faqs'] = sanitize_textarea_field($input['faqs']);
     
     return $output;
 }
@@ -120,6 +122,10 @@ function swcw_field_cb($args) {
             break;
         case 'delay':
             echo '<input type="number" name="swcw_settings[delay]" value="' . esc_attr($value ?: 0) . '" class="small-text"> seconds';
+            break;
+        case 'faqs':
+            echo '<textarea name="swcw_settings[faqs]" rows="5" class="large-text" placeholder="Price?|Our price starts from $10.&#10;Services?|We provide Web Design and SEO.">' . esc_textarea($value) . '</textarea>';
+            echo '<p class="description">Har line par ek sawal aur uska jawab likhein (Format: Question|Answer).</p>';
             break;
         default:
             echo '<input type="text" name="swcw_settings[' . $id . ']" value="' . esc_attr($value) . '" class="regular-text">';

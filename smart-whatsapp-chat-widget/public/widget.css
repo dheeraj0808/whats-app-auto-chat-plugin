@@ -125,7 +125,10 @@
 /* Body */
 .swcw-body {
     padding: 20px;
-    min-height: 150px;
+    height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
     background-size: contain;
 }
@@ -139,6 +142,70 @@
     max-width: 85%;
     position: relative;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    word-wrap: break-word;
+}
+
+/* FAQ Chips */
+.swcw-faq-container {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.swcw-faq-chip {
+    background: white;
+    border: 1px solid #25D366;
+    color: #075e54;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.swcw-faq-chip:hover {
+    background: #25D366;
+    color: white;
+}
+
+/* Bot Answer Bubble (Left side) */
+.swcw-bot-reply {
+    margin-top: 15px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 0 15px 15px 15px;
+    font-size: 14px;
+    color: #333;
+    max-width: 85%;
+    align-self: flex-start;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    animation: swcwFadeInLeft 0.3s ease;
+}
+
+/* User Message Bubble (Right side) */
+.swcw-user-msg {
+    margin-top: 15px;
+    background: #dcf8c6;
+    padding: 10px 15px;
+    border-radius: 15px 0 15px 15px;
+    font-size: 14px;
+    color: #333;
+    max-width: 85%;
+    align-self: flex-end;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    animation: swcwFadeInRight 0.3s ease;
+}
+
+@keyframes swcwFadeInLeft {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes swcwFadeInRight {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 .swcw-time {

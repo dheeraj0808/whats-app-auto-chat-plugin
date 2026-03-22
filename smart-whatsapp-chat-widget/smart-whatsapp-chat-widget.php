@@ -93,11 +93,27 @@ function swcw_inject_widget() {
                 </div>
                 <button class="swcw-close" id="swcwClose">&times;</button>
             </div>
-            <div class="swcw-body">
+            <div class="swcw-body" id="swcwBody">
                 <div class="swcw-msg-bubble">
                     <?php echo $welcome_msg; ?>
                     <span class="swcw-time"><?php echo date('H:i'); ?></span>
                 </div>
+                
+                <?php
+                // Render FAQs if they exist
+                $faqs_str = !empty($options['faqs']) ? $options['faqs'] : '';
+                if ($faqs_str):
+                    $lines = explode("\n", str_replace("\r", "", $faqs_str));
+                    echo '<div class="swcw-faq-container">';
+                    foreach ($lines as $line) {
+                        if (strpos($line, '|') !== false) {
+                            list($q, $a) = explode('|', $line, 2);
+                            echo '<button class="swcw-faq-chip" data-answer="' . esc_attr(trim($a)) . '">' . esc_html(trim($q)) . '</button>';
+                        }
+                    }
+                    echo '</div>';
+                endif;
+                ?>
             </div>
             <div class="swcw-footer">
                 <div class="swcw-input-wrap">

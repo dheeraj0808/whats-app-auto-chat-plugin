@@ -9,8 +9,50 @@
         const closeBtn = document.getElementById('swcwClose');
         const sendBtn = document.getElementById('swcwSend');
         const input = document.getElementById('swcwInput');
+        const bodyEl = document.getElementById('swcwBody');
 
-        if (!trigger || !windowEl || !closeBtn || !sendBtn || !input) return;
+        if (!trigger || !windowEl || !closeBtn || !sendBtn || !input || !bodyEl) return;
+
+        /**
+         * Handle FAQ Clicks
+         */
+        const handleFAQClick = (e) => {
+            const chip = e.target.closest('.swcw-faq-chip');
+            if (!chip) return;
+
+            const answer = chip.getAttribute('data-answer');
+            const question = chip.textContent;
+            if (!answer) return;
+
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            // 1. Create User Question Bubble (on right)
+            const userMsg = document.createElement('div');
+            userMsg.className = 'swcw-user-msg';
+            userMsg.innerHTML = `
+                ${question}
+                <span class="swcw-time">${timeStr}</span>
+            `;
+            bodyEl.appendChild(userMsg);
+
+            // 2. Create Bot Reply Bubble (on left)
+            setTimeout(() => {
+                const botReply = document.createElement('div');
+                botReply.className = 'swcw-bot-reply';
+                botReply.innerHTML = `
+                    ${answer}
+                    <span class="swcw-time">${timeStr}</span>
+                `;
+                bodyEl.appendChild(botReply);
+                bodyEl.scrollTop = bodyEl.scrollHeight;
+            }, 600); // Small delay for "typing" effect
+            
+            // Scroll to bottom
+            bodyEl.scrollTop = bodyEl.scrollHeight;
+        };
+
+        bodyEl.addEventListener('click', handleFAQClick);
 
         /**
          * Open Widget
